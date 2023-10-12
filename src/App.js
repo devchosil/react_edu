@@ -1,24 +1,18 @@
-import logo from './logo.svg';
+import { Button } from 'antd';
 import './App.css';
+import LayoutTemplate from '../src/components/layout';
+import TodoList from '../src/components/todolist';
+
+// #F9F7F7 연한 그레이
+// #DBE2EF 하늘색
+// #3F72AF 파란색
+// #112D4E 남색
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <LayoutTemplate>
+      <TodoList />
+    </LayoutTemplate>
   );
 }
 
