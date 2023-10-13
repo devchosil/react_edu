@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from 'antd';
 import styled from 'styled-components';
-
+import { addTodo, toggleTodo } from '../modules/todos';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 const TodoList = () => {
 
     const TodoListWrapper = styled.div`
@@ -13,6 +15,13 @@ const TodoList = () => {
         flex-direction:column;
         /* justify-items:center; */
     `;
+
+    const dispatch = useDispatch();
+    const testData = useSelector(state=>state);
+    
+    useEffect(()=>{
+        console.log(testData);
+    })
 
     const [todoInput,setTodoInput] = useState();
     const onChangeTodoInput = (e) => setTodoInput(e.target.value);
@@ -30,7 +39,7 @@ const TodoList = () => {
             </div>
             <div>ㅎㅇ</div>
             <div>하이</div>
-            <Button>테스트용</Button>
+            <Button onClick={() => dispatch(addTodo('테스트입니다.'))}>테스트용</Button>
         </TodoListWrapper>
     )
 }
