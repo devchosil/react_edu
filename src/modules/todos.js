@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 // redux toolkit은 기존의 action, reducer, initState를 createSlice 인자 객체에 통합할 수 있음
     export const todosSlice = createSlice({
