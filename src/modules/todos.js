@@ -20,12 +20,19 @@ import { createSlice } from '@reduxjs/toolkit';
                 : todo;
             });
         },
+        modifyTodo(state, action) {
+            return state.map((todo) => {
+            return todo.id === action.payload.id
+                ? { ...todo, text: action.payload.text }
+                : todo;
+            });
+        },
         removeTodo(state, action) {
             return state.filter((todo) => todo.id !== action.payload);
         },
         },
     });
     
-    export const { addTodo, toggleTodo, removeTodo } = todosSlice.actions;
+    export const { addTodo, modifyTodo, toggleTodo, removeTodo } = todosSlice.actions;
     
     export default todosSlice.reducer;

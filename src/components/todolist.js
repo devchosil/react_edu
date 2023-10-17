@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Checkbox } from 'antd';
 // import Input from '../atoms/input';
-import { CloseCircleFilled } from "@ant-design/icons";
+import { EditFilled, DeleteFilled, SaveFilled } from "@ant-design/icons";
 import styled from 'styled-components';
-import { addTodo, toggleTodo, removeTodo } from '../modules/todos';
+import { addTodo, modifyTodo, toggleTodo, removeTodo } from '../modules/todos';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 
@@ -12,7 +12,10 @@ import { useSelector } from 'react-redux';
 const TodoListWrapper = styled.div`
     display:flex;
     width:40%;
-    margin:20px;
+    margin:35px;
+    background-color: #f9f8f3;
+    border-radius: 5%;
+    padding: 40px;
     flex-direction:column;
 `;
 
@@ -23,9 +26,27 @@ const TodoList = () => {
     
 
     const [todoInput,setTodoInput] = useState("");
+    const [isEdited,setIsEdited] =useState(false);
+    const [editedItemId, setEditedItemId] = useState(false);
+    const [editedInput, setEditedInput] = useState("");
+
     const onChangeTodoInput = (e) => {
-        console.log('Change:', e.target.value);
         setTodoInput(e.target.value); 
+    }
+
+    const onChangeEditInput = (e) => {
+        setEditedInput(e.target.value)
+    }
+
+    const onClickModifyButton = (id) => {
+        setIsEdited(true);
+        setEditedItemId(id);
+    }
+
+    const onClickConfirmButton = (id) => {
+        dispatch(modifyTodo({id:parseInt(id), text:editedInput}))
+        setIsEdited(false);
+        setEditedItemId(id);
     }
 
     const addTodoInput = () => {
@@ -37,19 +58,13 @@ const TodoList = () => {
         setTodoInput('');
     }
 
-    // const checkTodo = (e) => {
-    //     const todoStatus = e.target.checked;
-    //     console.log(todoData);
-    //     // dispatch(toggleTodo())
-    // }
-
     useEffect(()=>{
         console.log(todoData);
     },[todoData]);
 
     return (
         <TodoListWrapper>
-            <div style={{display:"flex"}}>
+            <div style={{display:"flex", marginBottom:"12px"}}>
                 <Input
                     autoFocus
                     type="text"
@@ -58,23 +73,42 @@ const TodoList = () => {
                     placeholder='할일을 입력하세요'
                 />
                 <Button 
-                    style={{backgroundColor:"#001529", color:"white", marginLeft:"5px"}}
+                    style={{backgroundColor:"#ADC4CE", color:"white", marginLeft:"5px"}}
                     onClick={addTodoInput}
                 >+</Button>
             </div>
             { todoData?.length>0
                 ?
-                todoData.map(data=>{
+                todoData.map((data,index)=>{
                     return (
-                        <div>
+                        <div style={{display:"flex"}}>
                             <Checkbox
+                                checked={data.done}
                                 onChange={()=>dispatch(toggleTodo(parseInt(data.id)))}
                             />
                             {data.done
                                 ? <span style={{padding:"0 8px 0 8px", textDecoration:"line-through"}}>{data.text}</span>
-                                : <span style={{padding:"0 8px 0 8px"}}>{data.text}</span>
+                                : isEdited&&(editedItemId === data.id)
+                                    ? <Input
+                                        style={{margin:"0 8px 0 8px"}} 
+                                        // placeholder={data.text}
+                                        defaultValue={data.text}
+                                        value={editedInput}
+                                        onChange={onChangeEditInput}
+                                        />
+                                    : <span style={{padding:"0 8px 0 8px"}}>{data.text}</span>
                             }
-                            <CloseCircleFilled
+                            {isEdited&&(editedItemId === data.id)
+                                ? <SaveFilled 
+                                    style={{color:"#96B6C5"}}
+                                    onClick={()=>onClickConfirmButton(data.id)} />
+                                : <EditFilled
+                                    style={{color:"#96B6C5"}}
+                                    onClick={()=>onClickModifyButton(data.id)}/>
+                            }
+                            
+                            <DeleteFilled
+                                style={{color:"#96B6C5", paddingLeft:"5px"}}
                                 onClick={()=>dispatch(removeTodo(parseInt(data.id)))}
                             />
                         </div>
